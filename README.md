@@ -14,9 +14,19 @@ Geohopper has been tested and is supported on the following operating systems:
 
 Installing Geohopper is straightforward. Follow these steps:
 
+### Linux
 1. Open your terminal
 2. Run the install script: `curl -s https://geohopper.net/installer | bash`
 3. It will install all the dependencies and you are good to go!
+
+### Windows
+A little harder atm since i have little Windows experience.
+1. Open PowerShell with Administrator perms.
+2. Run the install script: <br>
+  ```irm https://geohopper.net/installer.ps1 | iex``` <br>
+   **or** <br>
+   ```iex ((New-Object System.Net.WebClient).DownloadString('https://geohopper.net/installer.ps1'))```
+4. Now open your normal command line and use it with `geohopper <IP>`
 
 ## Usage
 
