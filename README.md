@@ -18,6 +18,17 @@ Installing Geohopper is straightforward. Follow these steps:
 2. Run the install script: `curl -s https://geohopper.net/installer | bash`
 3. It will install all the dependencies and you are good to go!
 
+## Usage
+
+Geohopper is a command-line tool. To use it, simply run:
+```geohopper <IP>```
+
+For example:
+```geohopper 1.1.1.1```
+
+You can also use domain names:
+```geohopper google.com```
+
 ## Example
 
 Here is an example of a Geohopper map: [From Germany to Japan](https://geohopper.net/globe.php?code=6570e8714e79c)
