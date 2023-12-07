@@ -1,23 +1,52 @@
 # Function to determine if an IP is local
 function Test-LocalIP {
     param ([string]$ip)
+    
+    # Check for IPv4 local addresses
     if ($ip.StartsWith("192.168.") -or $ip.StartsWith("10.") -or $ip.StartsWith("172.16.") -or $ip.StartsWith("172.31.")) {
         return $true
     }
+
+    # Check for IPv6 link-local addresses
+    if ($ip.StartsWith("fe80::")) {
+        return $true
+    }
+
+    # Check for IPv6 Unique Local Addresses (ULA)
+    $ipBytes = [System.Net.IPAddress]::Parse($ip).GetAddressBytes()
+    if ($ipBytes[0] -eq 0xfc -or $ipBytes[0] -eq 0xfd) {
+        return $true
+    }
+
     return $false
 }
+
 
 # Function to check if a string is a valid IP address
 function Test-ValidIP {
     param ([string]$ip)
-    if ($ip -match "^\d{1,3}(\.\d{1,3}){3}$") {
+
+    # Regex for IPv4
+    $ipv4Regex = "^\d{1,3}(\.\d{1,3}){3}$"
+
+    # Regex for IPv6
+    $ipv6Regex = "^((([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{1,4}))|(([0-9a-fA-F]{1,4}:){1,7}:)|((:[0-9a-fA-F]{1,4}){1,7}:))$"
+
+    # Check for IPv4
+    if ($ip -match $ipv4Regex) {
         $addr = $ip -split "\."
         if (($addr[0] -le 255) -and ($addr[1] -le 255) -and ($addr[2] -le 255) -and ($addr[3] -le 255)) {
             return $true
         }
     }
+    # Check for IPv6
+    elseif ($ip -match $ipv6Regex) {
+        return $true
+    }
+
     return $false
 }
+
 
 # Function to get IP information using ipinfo.io
 function Get-IPInfo {
@@ -45,11 +74,11 @@ function Invoke-GeoHopper {
 
     # Perform the traceroute and process each line
     $tracerouteOutput = Perform-Traceroute -targetIp $targetIp
+    Write-Host $tracerouteOutput
     foreach ($line in $tracerouteOutput) {
-        if ($line -match "\s*(\d+)\s+((\d+ ms)|\*)\s+((\d+ ms)|\*)\s+((\d+ ms)|\*)\s+(\d+\.\d+\.\d+\.\d+)") {
+        if ($line -match "\s*(\d+)\s+((\d+ ms)|\*)\s+((\d+ ms)|\*)\s+((\d+ ms)|\*)\s+((\d+\.\d+\.\d+\.\d+)|([0-9a-fA-F:]+))") {
             $hop = $matches[1]
             $ip = $matches[8]
-
 
             # Get the latencies for each hop
             $latencies = @($matches[2], $matches[4], $matches[6]) | Where-Object {$_ -ne "*"}
