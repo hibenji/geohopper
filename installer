@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Define the URL where the GeoHopper script is located
+GEOHOPPER_URL="https://geohopper.net/geohopper"
+
+# Define the directory where the GeoHopper script will be installed
+INSTALL_DIR="/usr/local/bin"
+
+# Dependencies required for the GeoHopper script
+DEPENDENCIES=("curl" "jq" "traceroute" "bc")
+
+# Install dependencies without prompts
+install_dependencies() {
+    echo "Installing dependencies..."
+    DEBIAN_FRONTEND=noninteractive
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update -yq > /dev/null
+        for dep in "${DEPENDENCIES[@]}"; do
+            sudo apt-get install -yq --no-install-recommends "$dep" > /dev/null
+        done
+    elif command -v yum &> /dev/null; then
+        sudo yum -y install "${DEPENDENCIES[@]}" > /dev/null
+    elif command -v zypper &> /dev/null; then
+        sudo zypper --non-interactive install "${DEPENDENCIES[@]}" > /dev/null
+    elif command -v pacman &> /dev/null; then
+        sudo pacman -Sy --noconfirm "${DEPENDENCIES[@]}" > /dev/null
+    else
+        echo "Package manager not supported. Please install dependencies manually."
+        return 1
+    fi
+}
+
+# Downloading the GeoHopper script
+echo "Downloading the GeoHopper script from $GEOHOPPER_URL..."
+curl -s -o geohopper "$GEOHOPPER_URL"
+
+# Verify download
+if [ ! -f geohopper ]; then
+    echo "Failed to download GeoHopper. Exiting."
+    exit 1
+fi
+
+# Make the script executable
+chmod +x geohopper
+
+# Move the script to the install directory
+sudo mv geohopper "$INSTALL_DIR/"
+
+# Install dependencies
+if ! install_dependencies; then
+    exit 1
+fi
+
+echo "GeoHopper has been installed successfully."

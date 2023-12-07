@@ -1,0 +1,67 @@
+body { margin: 0; }
+#hopsList {
+  position: fixed;
+  top: 6em;
+  left: 0;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2); /* light black */
+  color: white; /* text color */
+  border: 1px solid #dee2e6;
+  max-height: 50vh; /* half of the screen height */
+  overflow-y: auto;
+  border-radius: 15px; /* rounded corners */
+  direction: rtl; /* right-to-left text direction */
+  unicode-bidi: bidi-override; /* counteract the text direction change */
+  scrollbar-width: thin; /* for Firefox */
+  scrollbar-color: rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.2); /* for Firefox */
+}
+
+/* For Chrome, Safari, and Opera */
+#hopsList::-webkit-scrollbar {
+  width: 12px;
+}
+
+#hopsList::-webkit-scrollbar-track {
+  background: rgba(100, 100, 100, 0.2);
+  border-radius: 10px;
+}
+
+#hopsList::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0.2);
+}
+
+#hopsList a {
+  color: #00bfff;
+  text-decoration: none;
+}
+
+#hopsList a:hover {
+  color: #fff; 
+}
+
+#title {
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  background: transparent;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+
+}
+
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: none; }
+a:active { text-decoration: none; }
+
+h5 {
+  font-size: 0.8em;
+  margin-top: -1em;
+  color: #808080;
+}

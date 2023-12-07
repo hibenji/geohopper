@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# Function to check if a string is a valid IP address
+is_valid_ip() {
+    local ip=$1
+    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        IFS='.' read -ra addr <<< "$ip"
+        [[ ${addr[0]} -le 255 && ${addr[1]} -le 255 && ${addr[2]} -le 255 && ${addr[3]} -le 255 ]]
+        return $?
+    fi
+    return 1
+}
+
+# Function to determine if an IP is local
+is_local_ip() {
+    local ip=$1
+    if [[ $ip == 192.168.* || $ip == 10.* || $ip == 172.16.* || $ip == 172.31.* ]]; then
+        return 0
+    fi
+    return 1
+}
+
+# Function to get IP information using ipinfo.io
+get_ip_info() {
+    local ip=$1
+    curl -s "https://geohopper.net/lookup.php" \
+    --header 'Content-Type: text/plain' \
+    --data-raw "$ip"
+}
+
+# Function to perform traceroute and parse output
+perform_traceroute() {
+    local target_ip=$1
+    traceroute -n -q 3 "$target_ip"
+}
+
+# Main function
+geohopper() {
+    local target_ip=$1
+
+    echo "GeoHopper traceroute to $target_ip:"
+    echo "-------------------------------------"
+
+    # Variable to hold each hop in JSON format
+    local hops_json="["
+
+    # Perform the traceroute and process each line
+    while IFS= read -r line; do
+        read -r hop ip latency1 latency2 latency3 rest <<< "$line"
+        if is_valid_ip "$ip"; then
+            # Initialize an array to hold latency values
+            latencies=()
+            for latency in ${latency1//ms/} ${latency2//ms/} ${latency3//ms/}; do
+                # Check if the latency value is a number
+                if [[ $latency =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+                    latencies+=($latency)
+                fi
+            done
+            
+            # Calculate the average latency if we have valid numbers
+            local average_latency="*"
+            if [ ${#latencies[@]} -gt 0 ]; then
+                local sum_latency=0
+                for val in "${latencies[@]}"; do
+                    sum_latency=$(echo "$sum_latency + $val" | bc)
+                done
+                average_latency=$(echo "scale=2; $sum_latency / ${#latencies[@]}" | bc)
+            fi
+
+            if is_local_ip "$ip"; then
+                echo -e "Hop $hop: IP $ip\nLocation: Local\nASN Name: Local\nAverage Latency: ${average_latency}ms\n---------------------"
+            else
+                local info=$(get_ip_info "$ip")
+                local location=$(echo "$info" | jq -r '.city + ", " + .country')
+                local asn_name=$(echo "$info" | jq -r '.org')
+                local coordinates=$(echo "$info" | jq -r '.loc')
+                # Add the hop to the json
+                hops_json+="{\"hop\": $hop, \"ip\": \"$ip\", \"location\": \"$location\", \"asn_name\": \"$asn_name\", \"average_latency\": \"$average_latency\", \"coordinates\": \"$coordinates\"},"
+
+                echo -e "Hop $hop: IP $ip\nLocation: $location\nASN Name: $asn_name\nAverage Latency: ${average_latency}ms\nCoordinates: $coordinates\n---------------------"
+            fi
+        fi
+    done < <(perform_traceroute "$target_ip" | tail -n +2)
+
+    # Remove the last comma from the json
+    hops_json=${hops_json%?}
+    # Close the json
+    hops_json+="]"
+
+    # Print the json
+    # echo "$hops_json"
+
+    response=$(curl -s --location 'https://geohopper.net/upload.php' \
+    --header 'Content-Type: text/plain' \
+    --data "$hops_json")
+    echo "https://geohopper.net/globe.php?code=$response"
+
+
+}
+
+# Check for an IP argument
+if [ "$#" -ne 1 ]; then
+    echo "Usage: geohopper <IP>"
+    exit 1
+fi
+
+# Run the main function with the provided IP
+geohopper "$1"
