@@ -34,22 +34,27 @@
     <section class="installation">
         <h2>Installation Guide</h2>
         <p>Installing Geohopper is straightforward. Follow these steps:</p>
+
+        <h3>Linux</h3>
+
         <ol>
             <li>Open your terminal</li>
             <li>Run the install script: <code>curl -s https://geohopper.net/installer | bash</code></li>
             <li>It will install all the dependencies and you are good to go!</li>
         </ol>
 
-        <!-- ## Usage
 
-        Geohopper is a command-line tool. To use it, simply run:
-        ```geohopper <IP>```
-
-        For example:
-        ```geohopper 1.1.1.1```
-
-        You can also use domain names:
-        ```geohopper google.com``` -->
+        <h3>Windows</h3>
+        
+        <p>A little harder at the moment since I only have little Windows experience.</p>
+        <ol>
+            <li>Open PowerShell with Administrator perms.</li>
+            <li>Run the install script: <br>
+            <code>irm https://geohopper.net/installer.ps1 | iex</code> <br>
+            <strong>or</strong> <br>
+            <code>iex ((New-Object System.Net.WebClient).DownloadString('https://geohopper.net/installer.ps1'))</code></li>
+            <li>Now open your normal command line and use it with <code>geohopper &lt;IP&gt;</code></li>
+        </ol>
 
         <!-- usage -->
         <h3>Usage</h3>
