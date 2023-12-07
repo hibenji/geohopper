@@ -28,6 +28,17 @@ if ($result->num_rows > 0) {
 
 <head>
 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geohopper Overview</title>
+  <meta content="Geohopper" property="og:title">
+  <meta content="A Revolutionary 3D Traceroute Software" property="og:description">
+  <meta content="https://geohopper.net/" property="og:url">
+  <meta content="/geohopper.png" property="og:image">
+  <meta content="#43B581" data-react-helmet="true" name="theme-color">
+  <link rel="apple-touch-icon" sizes="180x180" href="/geohopper.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/geohopper.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/geohopper.png">
   <!-- import style sheet -->
   <link rel="stylesheet" href="./style.css" />
   <script src="//unpkg.com/globe.gl"></script>
