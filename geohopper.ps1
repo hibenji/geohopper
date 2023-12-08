@@ -1,3 +1,10 @@
+# check if there is a -v flag
+if ($args[0] -eq "-v") {
+    Write-Host "GeoHopper v1.1"
+    exit
+}
+
+
 # Function to determine if an IP is local
 function Test-LocalIP {
     param ([string]$ip)
@@ -123,7 +130,15 @@ function Invoke-GeoHopper {
     # Write-Host $hops_json_string
 
     $response = Invoke-RestMethod -Uri 'https://geohopper.net/upload.php' -Method Post -Body $hops_json_string -ContentType 'text/plain'
-    Write-Host "https://geohopper.net/globe.php?code=$response"
+    Write-Host "Map: https://geohopper.net/globe.php?code=$response"
+    Write-Host "Cool Map: https://geohopper.net/cool_globe.php?code=$response"
+}
+
+# check if there is no argument
+if ($args.Length -eq 0) {
+    Write-Host "Usage: geohopper <target IP>"
+    Write-Host "Version: geohopper -v"
+    exit
 }
 
 # Run the main function with the provided IP

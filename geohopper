@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# -v version flag
+if [ "$1" == "-v" ]; then
+    echo "GeoHopper v1.1"
+    exit 0
+fi
+
+
 # Function to check if a string is a valid IP address
 is_valid_ip() {
     local ip=$1
@@ -93,7 +100,8 @@ geohopper() {
     response=$(curl -s --location 'https://geohopper.net/upload.php' \
     --header 'Content-Type: text/plain' \
     --data "$hops_json")
-    echo "https://geohopper.net/globe.php?code=$response"
+    echo "Map: https://geohopper.net/globe.php?code=$response"
+    echo "Cool Map: https://geohopper.net/cool_globe.php?code=$response"
 
 
 }
@@ -101,6 +109,7 @@ geohopper() {
 # Check for an IP argument
 if [ "$#" -ne 1 ]; then
     echo "Usage: geohopper <IP>"
+    echo "Version: geohopper -v"
     exit 1
 fi
 

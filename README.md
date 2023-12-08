@@ -42,6 +42,7 @@ You can also use domain names:
 ## Example
 
 Here is an example of a Geohopper map: [From Germany to Japan](https://geohopper.net/globe.php?code=6570e8714e79c)
+Here is an example of a cooler Geohopper map (performance intensive): [From Germany to Japan](https://geohopper.net/cool_globe.php?code=6570e8714e79c)
 
 ![Geohopper Screenshot](geohopper_screenshot.png)
 

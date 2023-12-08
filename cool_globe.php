@@ -85,7 +85,7 @@ if ($result->num_rows > 0) {
 
   <script>
     const globe = Globe()
-      .globeImageUrl('https://unpkg.com/three-globe@2.30.0/example/img/earth-dark.jpg')
+      .globeImageUrl('nasa-1.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
       (document.getElementById('globeViz'));
