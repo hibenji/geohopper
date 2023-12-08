@@ -13,6 +13,9 @@ if ($conn->connect_error) {
     echo "Connection failed";
 }
 
+// escape the sql injection
+$code = $conn->real_escape_string($code);
+
 // get the json from the post request
 $sql = "SELECT json FROM `geohopper`.`traces` WHERE code='$code';";
 $result = $conn->query($sql);

@@ -19,6 +19,9 @@ if ($conn->connect_error) {
   echo "Connection failed";
 }
 
+// escape the ip sql injection
+$ip = $conn->real_escape_string($ip);
+
 // save it to the database
 $sql = "SELECT * FROM `geohopper`.`ip_cache` WHERE `ip` = '$ip';";
 $result = $conn->query($sql);

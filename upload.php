@@ -24,6 +24,9 @@ if ($conn->connect_error) {
 $code = uniqid();
 echo $code;
 
+// escape the json sql injection
+$json = $conn->real_escape_string($json);
+
 // save it to the database
 $sql = "INSERT INTO `geohopper`.`traces` (`code`, `json`) VALUES ('$code', '$json');";
 $result = $conn->query($sql);
