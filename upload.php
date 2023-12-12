@@ -27,8 +27,11 @@ echo $code;
 // escape the json sql injection
 $json = $conn->real_escape_string($json);
 
+// get current unix timestamp
+$timestamp = time();
+
 // save it to the database
-$sql = "INSERT INTO `geohopper`.`traces` (`code`, `json`) VALUES ('$code', '$json');";
+$sql = "INSERT INTO `geohopper`.`traces` (`code`, `json`, `timestamp`) VALUES ('$code', '$json', '$timestamp');";
 $result = $conn->query($sql);
 
 ?>
