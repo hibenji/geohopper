@@ -27,6 +27,9 @@ echo $code;
 // escape the json sql injection
 $json = $conn->real_escape_string($json);
 
+// remove any html tags
+$json = strip_tags($json);
+
 // get current unix timestamp
 $timestamp = time();
 
